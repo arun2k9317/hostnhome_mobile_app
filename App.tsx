@@ -1,20 +1,15 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { AppNavigator } from './src/navigation/AppNavigator';
+import 'react-native-gesture-handler';
+// Note: react-native-reanimated is not compatible with Expo Go
+// It requires a development build. Navigation will work with reduced animations.
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <>
+      <AppNavigator />
       <StatusBar style="auto" />
-    </View>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
