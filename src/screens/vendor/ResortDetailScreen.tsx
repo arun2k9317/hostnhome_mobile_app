@@ -11,6 +11,8 @@ import {
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaScrollView } from '../../components/ui/SafeAreaScrollView';
 import { colors } from '../../theme/colors';
 import { getResortById, getRoomsByResort } from '../../services/resorts';
 import { Resort, Room } from '../../types';
@@ -25,6 +27,7 @@ type RouteParams = {
 export function ResortDetailScreen() {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RouteParams, 'Rooms'>>();
+  const insets = useSafeAreaInsets();
   const { resortId } = route.params;
 
   const [resort, setResort] = useState<Resort | null>(null);
@@ -59,13 +62,14 @@ export function ResortDetailScreen() {
   };
 
   const handleAddRoom = () => {
-    // Navigate to add room (to be implemented)
-    console.log('Add room pressed');
+    navigation.navigate('CreateRoom' as never, { resortId: String(resortId) } as never);
   };
 
   const handleRoomPress = (room: Room) => {
-    // Navigate to room details/edit (to be implemented)
-    console.log('Room pressed:', room.id);
+    navigation.navigate('CreateRoom' as never, { 
+      resortId: String(resortId), 
+      roomId: String(room.id) 
+    } as never);
   };
 
   if (loading) {
@@ -96,9 +100,10 @@ export function ResortDetailScreen() {
   const bookedRooms = rooms.filter((r) => r.availability_status === 'booked').length;
 
   return (
-    <View style={styles.container}>
-      <ScrollView
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <SafeAreaScrollView
         style={styles.scrollView}
+        bottomInset={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -115,12 +120,14 @@ export function ResortDetailScreen() {
             {resort.name}
           </Text>
           <View style={styles.headerRight}>
-            <Chip
-              style={[styles.statusChip, { backgroundColor: statusColor + '20' }]}
-              textStyle={{ color: statusColor, fontSize: 12 }}
-            >
-              {resort.status === 'active' ? 'Active' : 'Inactive'}
-            </Chip>
+            <IconButton
+              icon="pencil"
+              size={20}
+              onPress={() => {
+                navigation.navigate('CreateResort' as never, { resortId: String(resort.id) } as never);
+              }}
+              iconColor={colors.primary}
+            />
           </View>
         </View>
 
@@ -266,12 +273,12 @@ export function ResortDetailScreen() {
             )}
           </Card.Content>
         </Card>
-      </ScrollView>
+      </SafeAreaScrollView>
 
       {/* Floating Action Button */}
       <FAB
         icon="plus"
-        style={styles.fab}
+        style={[styles.fab, { bottom: 16 + insets.bottom }]}
         onPress={handleAddRoom}
         label="Add Room"
       />
@@ -407,10 +414,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   headerRight: {
-    marginRight: 8,
-  },
-  statusChip: {
-    height: 24,
+    marginRight: 4,
   },
   imagesContainer: {
     maxHeight: 200,

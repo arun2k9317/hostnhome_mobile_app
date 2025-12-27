@@ -19,6 +19,8 @@ export type VendorStackParamList = {
   MainTabs: NavigatorScreenParams<VendorTabParamList>;
   Rooms: { resortId: string };
   ResortDetail: { resortId: string | number };
+  CreateResort: { resortId?: string };
+  CreateRoom: { resortId: string; roomId?: string };
   BookingDetails: { bookingId: string };
   QuotationDetails: { quotationId: string };
   CreateQuotation: undefined;
@@ -28,14 +30,19 @@ export type VendorStackParamList = {
   Reports: undefined;
 };
 
-// Super Admin Stack Navigator
-export type SuperAdminStackParamList = {
+// Super Admin Tab Navigator
+export type SuperAdminTabParamList = {
   Dashboard: undefined;
   Vendors: undefined;
-  VendorDetails: { vendorId: string };
   Plans: undefined;
   ActivityLogs: undefined;
   Settings: undefined;
+};
+
+// Super Admin Stack Navigator
+export type SuperAdminStackParamList = {
+  MainTabs: NavigatorScreenParams<SuperAdminTabParamList>;
+  VendorDetails: { vendorId: string };
 };
 
 // Root Navigator

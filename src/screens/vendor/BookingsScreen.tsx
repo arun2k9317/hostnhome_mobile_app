@@ -10,6 +10,7 @@ import {
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { getBookings } from '../../services/bookings';
 import { Booking } from '../../types';
@@ -17,6 +18,7 @@ import { formatCurrency, formatDate, formatDateRange } from '../../utils/formatt
 
 export function BookingsScreen() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,8 +75,7 @@ export function BookingsScreen() {
   };
 
   const handleBookingPress = (booking: Booking) => {
-    // Navigate to booking details (to be implemented)
-    console.log('Booking pressed:', booking.id);
+    navigation.navigate('BookingDetails' as never, { bookingId: String(booking.id) } as never);
   };
 
   const getStatusColor = (status: string) => {
@@ -110,7 +111,7 @@ export function BookingsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Searchbar
@@ -205,7 +206,7 @@ function BookingCard({ booking, onPress }: BookingCardProps) {
 
   return (
     <Card style={styles.bookingCard} onPress={onPress}>
-      <Card.Content>
+      <Card.Content style={styles.bookingCardContent}>
         <View style={styles.bookingHeader}>
           <View style={styles.bookingInfo}>
             <Text variant="titleMedium" style={styles.guestName}>
@@ -348,7 +349,16 @@ const styles = StyleSheet.create({
   },
   bookingCard: {
     marginBottom: 16,
-    elevation: 2,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    overflow: 'hidden',
+  },
+  bookingCardContent: {
+    padding: 20,
   },
   bookingHeader: {
     flexDirection: 'row',
@@ -360,15 +370,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   guestName: {
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontSize: 18,
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: 6,
+    lineHeight: 24,
   },
   bookingMeta: {
     color: colors.textSecondary,
+    fontSize: 13,
+    lineHeight: 18,
   },
   statusChip: {
-    height: 24,
+    height: 28,
+    borderRadius: 8,
   },
   bookingDetails: {
     flexDirection: 'row',

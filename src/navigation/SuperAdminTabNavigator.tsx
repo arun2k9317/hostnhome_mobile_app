@@ -3,18 +3,18 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'react-native-paper';
-import { VendorTabParamList } from './types';
+import { SuperAdminTabParamList } from './types';
 
-// Screens (will be created)
-import { DashboardScreen } from '../screens/vendor/DashboardScreen';
-import { ResortsScreen } from '../screens/vendor/ResortsScreen';
-import { BookingsScreen } from '../screens/vendor/BookingsScreen';
-import { QuotationsScreen } from '../screens/vendor/QuotationsScreen';
-import { MoreScreen } from '../screens/vendor/MoreScreen';
+// Super Admin Screens
+import { SuperAdminDashboardScreen } from '../screens/super-admin/DashboardScreen';
+import { VendorsScreen } from '../screens/super-admin/VendorsScreen';
+import { PlansScreen } from '../screens/super-admin/PlansScreen';
+import { ActivityLogsScreen } from '../screens/super-admin/ActivityLogsScreen';
+import { SettingsScreen } from '../screens/vendor/SettingsScreen';
 
-const Tab = createBottomTabNavigator<VendorTabParamList>();
+const Tab = createBottomTabNavigator<SuperAdminTabParamList>();
 
-export function VendorTabNavigator() {
+export function SuperAdminTabNavigator() {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
 
@@ -33,7 +33,7 @@ export function VendorTabNavigator() {
     >
       <Tab.Screen
         name="Dashboard"
-        component={DashboardScreen}
+        component={SuperAdminDashboardScreen}
         options={{
           tabBarLabel: 'Dashboard',
           tabBarIcon: ({ color, size }) => (
@@ -42,42 +42,42 @@ export function VendorTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Resorts"
-        component={ResortsScreen}
+        name="Vendors"
+        component={VendorsScreen}
         options={{
-          tabBarLabel: 'Resorts',
+          tabBarLabel: 'Vendors',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" size={Number(size) || 24} color={color} />
+            <MaterialCommunityIcons name="office-building" size={Number(size) || 24} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Bookings"
-        component={BookingsScreen}
+        name="Plans"
+        component={PlansScreen}
         options={{
-          tabBarLabel: 'Bookings',
+          tabBarLabel: 'Plans',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="calendar-check" size={Number(size) || 24} color={color} />
+            <MaterialCommunityIcons name="package-variant" size={Number(size) || 24} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Quotations"
-        component={QuotationsScreen}
+        name="ActivityLogs"
+        component={ActivityLogsScreen}
         options={{
-          tabBarLabel: 'Quotations',
+          tabBarLabel: 'Logs',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="file-document-outline" size={Number(size) || 24} color={color} />
+            <MaterialCommunityIcons name="file-document-multiple" size={Number(size) || 24} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="More"
-        component={MoreScreen}
+        name="Settings"
+        component={SettingsScreen}
         options={{
-          tabBarLabel: 'More',
+          tabBarLabel: 'Settings',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="menu" size={Number(size) || 24} color={color} />
+            <MaterialCommunityIcons name="cog" size={Number(size) || 24} color={color} />
           ),
         }}
       />

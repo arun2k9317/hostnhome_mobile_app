@@ -63,7 +63,21 @@ export async function getQuotationById(id: string): Promise<{ quotation: Quotati
       .single();
 
     if (error) throw error;
-    return { quotation: data };
+    
+    // Transform snake_case to camelCase for app use
+    const transformed = data ? {
+      ...data,
+      vendorId: data.vendor_id,
+      resortId: data.resort_id,
+      guestName: data.guest_name,
+      checkIn: data.check_in,
+      checkOut: data.check_out,
+      totalAmount: data.total_amount,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    } : null;
+    
+    return { quotation: transformed };
   } catch (error) {
     console.error('Error fetching quotation:', error);
     return { quotation: null };

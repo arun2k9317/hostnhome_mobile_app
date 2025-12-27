@@ -33,7 +33,7 @@ export const authService = {
         return { user: null, session: null, error };
       }
 
-      // Fetch user role from users table
+      // Fetch user role from user_profiles table
       const user = await authService.getCurrentUser();
       
       return {
@@ -60,7 +60,7 @@ export const authService = {
         return { user: null, session: null, error };
       }
 
-      // Fetch user role from users table
+      // Fetch user role from user_profiles table
       const user = await authService.getCurrentUser();
       
       return {
@@ -96,18 +96,23 @@ export const authService = {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       
       if (!authUser) {
+        console.log('🔍 No authenticated user found');
         return null;
       }
 
-      // Fetch user data from users table to get role
+      console.log('🔍 Fetching user profile for auth_user_id:', authUser.id);
+      console.log('🔍 Auth user email:', authUser.email);
+
+      // Fetch user data from user_profiles table to get role
       const { data: userData, error } = await supabase
-        .from('users')
+        .from('user_profiles')
         .select('*')
-        .eq('id', authUser.id)
+        .eq('auth_user_id', authUser.id)
         .single();
 
       if (error || !userData) {
-        // If user table doesn't exist or user not found, return basic user info
+        console.error('❌ Error fetching user profile:', error);
+        console.warn('⚠️ User profile not found, using default vendor role');
         return {
           id: authUser.id,
           email: authUser.email || '',
@@ -115,15 +120,24 @@ export const authService = {
         };
       }
 
-      return {
+      console.log('✅ User profile found:', {
         id: userData.id,
         email: userData.email,
         role: userData.role,
+        vendor_id: userData.vendor_id,
+        staff_id: userData.staff_id,
+      });
+      console.log('✅ Returning user with role:', userData.role);
+
+      return {
+        id: authUser.id,
+        email: userData.email || authUser.email || '',
+        role: userData.role as User['role'],
         vendorId: userData.vendor_id,
         staffId: userData.staff_id,
       } as User;
     } catch (error) {
-      console.error('Error getting current user:', error);
+      console.error('❌ Error getting current user:', error);
       return null;
     }
   },

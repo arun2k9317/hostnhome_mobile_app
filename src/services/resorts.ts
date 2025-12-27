@@ -51,10 +51,51 @@ export async function createResort(resortData: {
   status?: 'active' | 'inactive';
 }): Promise<{ resort: Resort }> {
   try {
+    // Get the current user with vendor_id from users table
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    if (!authUser) {
+      throw new Error('User not authenticated');
+    }
+
+    // Fetch user data from users table to get vendor_id
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('vendor_id, id')
+      .eq('id', authUser.id)
+      .single();
+
+    let vendorId: string | null = null;
+
+    if (userError || !userData) {
+      // Fallback: try to get from profiles table
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('vendor_id')
+        .eq('id', authUser.id)
+        .single();
+      
+      if (profile?.vendor_id) {
+        vendorId = profile.vendor_id;
+      } else if (authUser.user_metadata?.vendor_id) {
+        vendorId = authUser.user_metadata.vendor_id;
+      } else if (authUser.user_metadata?.vendorId) {
+        vendorId = authUser.user_metadata.vendorId;
+      }
+    } else {
+      vendorId = userData.vendor_id;
+    }
+
+    if (!vendorId) {
+      console.error('Auth user:', authUser.id);
+      console.error('User data:', userData);
+      throw new Error('Vendor ID not found. Please ensure you are logged in as a vendor.');
+    }
+
     const { data, error } = await supabase
       .from('resorts')
       .insert({
         ...resortData,
+        vendor_id: vendorId,
         status: resortData.status || 'active',
       })
       .select()

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
+import { SafeAreaScrollView } from '../../components/ui/SafeAreaScrollView';
 import { useAuth } from '../../hooks/useAuth';
 import { colors } from '../../theme/colors';
 
@@ -35,7 +36,7 @@ export function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <SafeAreaScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.surface}>
           <Text variant="headlineMedium" style={styles.title}>
             HostnHome
@@ -86,7 +87,7 @@ export function LoginScreen() {
             Demo: vendor@example.com / password123
           </Text>
         </View>
-      </ScrollView>
+      </SafeAreaScrollView>
     </KeyboardAvoidingView>
   );
 }

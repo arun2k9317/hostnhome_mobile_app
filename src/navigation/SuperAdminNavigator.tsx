@@ -1,8 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SuperAdminStackParamList } from './types';
+import { SuperAdminTabNavigator } from './SuperAdminTabNavigator';
 
-// Placeholder screens (will be created later)
+// Placeholder for vendor details (will be created later)
 import { SettingsScreen } from '../screens/vendor/SettingsScreen';
 
 const Stack = createStackNavigator<SuperAdminStackParamList>();
@@ -15,28 +16,12 @@ export function SuperAdminNavigator() {
       }}
     >
       <Stack.Screen 
-        name="Dashboard" 
-        component={SettingsScreen} // Placeholder
-      />
-      <Stack.Screen 
-        name="Vendors" 
-        component={SettingsScreen} // Placeholder
+        name="MainTabs" 
+        component={SuperAdminTabNavigator}
       />
       <Stack.Screen 
         name="VendorDetails" 
-        component={SettingsScreen} // Placeholder
-      />
-      <Stack.Screen 
-        name="Plans" 
-        component={SettingsScreen} // Placeholder
-      />
-      <Stack.Screen 
-        name="ActivityLogs" 
-        component={SettingsScreen} // Placeholder
-      />
-      <Stack.Screen 
-        name="Settings" 
-        component={SettingsScreen}
+        component={SettingsScreen} // Placeholder - will be replaced with VendorDetailScreen
       />
     </Stack.Navigator>
   );

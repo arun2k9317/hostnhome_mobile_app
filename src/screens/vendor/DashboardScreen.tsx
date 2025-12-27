@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl, Dimensions } from 'react-native';
+import { View, StyleSheet, RefreshControl, Dimensions } from 'react-native';
 import { Text, Card, ActivityIndicator, Surface, Button } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaScrollView } from '../../components/ui/SafeAreaScrollView';
 import { colors } from '../../theme/colors';
 import { getResorts } from '../../services/resorts';
 import { getBookings } from '../../services/bookings';
@@ -106,8 +107,9 @@ export function DashboardScreen() {
   }
 
   return (
-    <ScrollView
+    <SafeAreaScrollView
       style={styles.container}
+      bottomInset={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -227,7 +229,7 @@ export function DashboardScreen() {
           </Text>
         </Surface>
       </View>
-    </ScrollView>
+    </SafeAreaScrollView>
   );
 }
 
@@ -322,30 +324,51 @@ const styles = StyleSheet.create({
   statCard: {
     width: (width - 48) / 2,
     margin: 8,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    overflow: 'hidden',
   },
   statCardContent: {
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
   },
   statCardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   statCardTitle: {
     marginLeft: 8,
     color: colors.textSecondary,
     fontSize: 12,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   statCardValue: {
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontSize: 24,
     marginBottom: 4,
+    lineHeight: 32,
   },
   statCardSubtitle: {
     color: colors.textSecondary,
-    fontSize: 11,
+    fontSize: 12,
+    lineHeight: 16,
   },
   card: {
     marginBottom: 16,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    overflow: 'hidden',
   },
   statusRow: {
     flexDirection: 'row',
@@ -373,22 +396,33 @@ const styles = StyleSheet.create({
   actionCard: {
     flex: 1,
     marginHorizontal: 4,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
   },
   actionContent: {
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   actionLabel: {
     marginTop: 8,
     textAlign: 'center',
     color: colors.text,
+    fontSize: 12,
+    fontWeight: '600',
   },
   welcomeCard: {
     padding: 24,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: colors.primary + '10',
     alignItems: 'center',
     marginTop: 8,
+    borderWidth: 1,
+    borderColor: colors.primary + '20',
   },
   welcomeTitle: {
     marginTop: 12,

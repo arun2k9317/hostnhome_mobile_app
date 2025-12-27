@@ -35,10 +35,12 @@ export function useAuth(): UseAuthReturn {
 
   const loadUser = async () => {
     try {
+      console.log('🔄 useAuth - Loading user...');
       const currentUser = await authService.getCurrentUser();
+      console.log('🔄 useAuth - User loaded:', currentUser ? { id: currentUser.id, email: currentUser.email, role: currentUser.role } : 'null');
       setUser(currentUser);
     } catch (error) {
-      console.error('Error loading user:', error);
+      console.error('❌ useAuth - Error loading user:', error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -48,13 +50,15 @@ export function useAuth(): UseAuthReturn {
   const signIn = useCallback(async (email: string, password: string) => {
     setLoading(true);
     try {
+      console.log('🔐 useAuth - Signing in:', email);
       const response = await authService.signIn(email, password);
       if (response.error) {
         throw response.error;
       }
+      console.log('🔐 useAuth - Sign in successful, user:', response.user ? { id: response.user.id, email: response.user.email, role: response.user.role } : 'null');
       setUser(response.user);
     } catch (error) {
-      console.error('Sign in error:', error);
+      console.error('❌ useAuth - Sign in error:', error);
       throw error;
     } finally {
       setLoading(false);

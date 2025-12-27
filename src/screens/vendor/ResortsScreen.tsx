@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { getResorts } from '../../services/resorts';
 import { Resort } from '../../types';
@@ -18,6 +19,7 @@ import { formatDate } from '../../utils/formatters';
 
 export function ResortsScreen() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [resorts, setResorts] = useState<Resort[]>([]);
   const [filteredResorts, setFilteredResorts] = useState<Resort[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,8 +83,7 @@ export function ResortsScreen() {
   };
 
   const handleAddResort = () => {
-    // Navigate to add resort screen (to be implemented)
-    console.log('Add resort pressed');
+    navigation.navigate('CreateResort' as never, {} as never);
   };
 
   if (loading) {
@@ -95,7 +96,7 @@ export function ResortsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Searchbar
@@ -173,7 +174,7 @@ export function ResortsScreen() {
       {/* Floating Action Button */}
       <FAB
         icon="plus"
-        style={styles.fab}
+        style={[styles.fab, { bottom: 16 + insets.bottom }]}
         onPress={handleAddResort}
         label="Add Resort"
       />
@@ -192,7 +193,7 @@ function ResortCard({ resort, onPress }: ResortCardProps) {
 
   return (
     <Card style={styles.resortCard} onPress={onPress}>
-      <Card.Content>
+      <Card.Content style={styles.resortCardContent}>
         <View style={styles.resortHeader}>
           <View style={styles.resortInfo}>
             <Text variant="titleLarge" style={styles.resortName}>
@@ -312,22 +313,33 @@ const styles = StyleSheet.create({
   },
   resortCard: {
     marginBottom: 16,
-    elevation: 2,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    overflow: 'hidden',
+  },
+  resortCardContent: {
+    padding: 20,
   },
   resortHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   resortInfo: {
     flex: 1,
     marginRight: 8,
   },
   resortName: {
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontSize: 18,
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: 6,
+    lineHeight: 24,
   },
   resortMeta: {
     flexDirection: 'row',
@@ -336,33 +348,43 @@ const styles = StyleSheet.create({
   resortLocation: {
     marginLeft: 4,
     color: colors.textSecondary,
+    fontSize: 13,
   },
   statusChip: {
-    height: 24,
+    height: 28,
+    borderRadius: 8,
   },
   resortDescription: {
     color: colors.textSecondary,
     marginBottom: 12,
+    fontSize: 14,
+    lineHeight: 20,
   },
   amenitiesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
+    gap: 6,
   },
   amenityChip: {
-    marginRight: 4,
-    marginBottom: 4,
-    height: 24,
+    marginRight: 0,
+    marginBottom: 0,
+    height: 28,
+    borderRadius: 6,
   },
   moreAmenities: {
     color: colors.textSecondary,
     marginLeft: 4,
+    fontSize: 12,
   },
   resortFooter: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginTop: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
   },
   fab: {
     position: 'absolute',
@@ -370,5 +392,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: colors.primary,
+    borderRadius: 16,
   },
 });

@@ -10,6 +10,7 @@ import {
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../theme/colors';
 import { getQuotations } from '../../services/quotations';
 import { Quotation } from '../../types';
@@ -17,6 +18,7 @@ import { formatCurrency, formatDate, formatDateRange } from '../../utils/formatt
 
 export function QuotationsScreen() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [quotations, setQuotations] = useState<Quotation[]>([]);
   const [filteredQuotations, setFilteredQuotations] = useState<Quotation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,13 +75,11 @@ export function QuotationsScreen() {
   };
 
   const handleQuotationPress = (quotation: Quotation) => {
-    // Navigate to quotation details (to be implemented)
-    console.log('Quotation pressed:', quotation.id);
+    navigation.navigate('QuotationDetails' as never, { quotationId: String(quotation.id) } as never);
   };
 
   const handleCreateQuotation = () => {
-    // Navigate to create quotation (to be implemented)
-    console.log('Create quotation pressed');
+    navigation.navigate('CreateQuotation' as never, {} as never);
   };
 
   const statusOptions = [
@@ -100,7 +100,7 @@ export function QuotationsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Searchbar
@@ -171,7 +171,7 @@ export function QuotationsScreen() {
       {/* Floating Action Button */}
       <FAB
         icon="plus"
-        style={styles.fab}
+        style={[styles.fab, { bottom: 16 + insets.bottom }]}
         onPress={handleCreateQuotation}
         label="New Quotation"
       />
@@ -209,7 +209,7 @@ function QuotationCard({ quotation, onPress }: QuotationCardProps) {
 
   return (
     <Card style={styles.quotationCard} onPress={onPress}>
-      <Card.Content>
+      <Card.Content style={styles.quotationCardContent}>
         <View style={styles.quotationHeader}>
           <View style={styles.quotationInfo}>
             <Text variant="titleMedium" style={styles.guestName}>
@@ -338,7 +338,16 @@ const styles = StyleSheet.create({
   },
   quotationCard: {
     marginBottom: 16,
-    elevation: 2,
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    overflow: 'hidden',
+  },
+  quotationCardContent: {
+    padding: 20,
   },
   quotationHeader: {
     flexDirection: 'row',
@@ -350,15 +359,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   guestName: {
-    fontWeight: 'bold',
+    fontWeight: '700',
+    fontSize: 18,
     color: colors.text,
-    marginBottom: 4,
+    marginBottom: 6,
+    lineHeight: 24,
   },
   quotationMeta: {
     color: colors.textSecondary,
+    fontSize: 13,
+    lineHeight: 18,
   },
   statusChip: {
-    height: 24,
+    height: 28,
+    borderRadius: 8,
   },
   quotationDetails: {
     flexDirection: 'row',

@@ -66,7 +66,24 @@ export async function getBookingById(id: string): Promise<{ booking: Booking | n
       .single();
 
     if (error) throw error;
-    return { booking: data };
+    
+    // Transform snake_case to camelCase for app use
+    const transformed = data ? {
+      ...data,
+      vendorId: data.vendor_id,
+      resortId: data.resort_id,
+      quotationId: data.quotation_id,
+      guestName: data.guest_name,
+      checkIn: data.check_in,
+      checkOut: data.check_out,
+      totalAmount: data.total_amount,
+      paidAmount: data.paid_amount,
+      paymentStatus: data.payment_status,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    } : null;
+    
+    return { booking: transformed };
   } catch (error) {
     console.error('Error fetching booking:', error);
     return { booking: null };
